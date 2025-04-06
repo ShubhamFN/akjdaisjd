@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail - SuperKart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, #ff8c00, #ff4500);
+            padding: 1rem;
+            height: 80px;
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-link {
+            color: white !important;
+            font-size: 18px;
+        }
+
+        .product-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        .product-detail-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 400px;
+            object-fit: contain;
+            border-radius: 8px;
+            padding: 20px;
+            background: white;
+        }
+
+        .product-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin: 1rem 0;
+        }
+
+        .product-price {
+            font-size: 24px;
+            color: #ff4500;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .product-description {
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .quantity-btn {
+            background: linear-gradient(90deg, #ff8c00, #ff4500);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .quantity-btn:hover {
+            opacity: 0.9;
+        }
+
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            margin: 0 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 0.25rem;
+        }
+
+        .add-to-cart-btn {
+            background: linear-gradient(90deg, #ff8c00, #ff4500);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            font-size: 18px;
+            width: 100%;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .add-to-cart-btn:hover {
+            opacity: 0.9;
+        }
+
+        .specifications {
+            margin-top: 2rem;
+        }
+
+        .spec-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .spec-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .spec-item {
+            display: flex;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+
+        .spec-label {
+            font-weight: bold;
+            width: 150px;
+            color: #666;
+        }
+
+        .spec-value {
+            color: #333;
+        }
+
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 1rem;
+            border-radius: 4px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">SuperKart</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="new cart.html">Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="new orders.html">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="new notification.html">Notifications</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="product-container">
+        <div class="product-detail-card">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="path_to_product_image.jpg" alt="Product" class="product-image" id="productImage">
+                </div>
+                <div class="col-md-6">
+                    <h1 class="product-title" id="productTitle">Product Title</h1>
+                    <div class="product-price" id="productPrice">₹0</div>
+                    <p class="product-description" id="productDescription">Product description loading...</p>
+                    
+                    <div class="quantity-selector">
+                        <button class="quantity-btn" onclick="updateQuantity(-1)">-</button>
+                        <input type="number" class="quantity-input" value="1" min="1" id="quantity">
+                        <button class="quantity-btn" onclick="updateQuantity(1)">+</button>
+                    </div>
+
+                    <button class="add-to-cart-btn" onclick="addToCart()">Add to Cart</button>
+
+                    <div class="specifications">
+                        <h2 class="spec-title">Specifications</h2>
+                        <ul class="spec-list" id="specList">
+                            <!-- Specifications will be added here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="success-message" id="successMessage">
+        Product added to cart successfully!
+    </div>
+    <script>
+        const products = {
+            1: {
+                name: "Laptop",
+                price: "₹50,000",
+                description: "High-performance laptop with latest features. Perfect for both work and entertainment.",
+                image: "https://m.media-amazon.com/images/I/81KoSSAwH2L._SL1500_.jpg",
+                specifications: {
+                    "Processor": "Intel Core i7",
+                    "RAM": "16GB",
+                    "Storage": "512GB SSD",
+                    "Display": "15.6 inch Full HD",
+                    "Battery": "6 hours"
+                }
+            },
+            2: {
+                name: "Smartphone",
+                price: "₹20,000",
+                description: "Latest smartphone with advanced camera features and powerful performance.",
+                image: "https://m.media-amazon.com/images/I/61lKQWyMdDL._SL1500_.jpg",
+                specifications: {
+                    "Processor": "Snapdragon 888",
+                    "RAM": "8GB",
+                    "Storage": "128GB",
+                    "Display": "6.5 inch AMOLED",
+                    "Battery": "4500mAh"
+                }
+            },
+            3: {
+                name: "Headphones",
+                price: "₹2,500",
+                description: "Premium wireless headphones with noise cancellation and superior sound quality.",
+                image: "https://m.media-amazon.com/images/I/71+7Cq7yEtL._SL1500_.jpg",
+                specifications: {
+                    "Type": "Over-ear",
+                    "Connectivity": "Bluetooth 5.0",
+                    "Battery Life": "20 hours",
+                    "Noise Cancellation": "Active",
+                    "Weight": "250g"
+                }
+            },
+            4: {
+                name: "Smartwatch",
+                price: "₹15,000",
+                description: "Feature-rich smartwatch with health tracking and notifications.",
+                image: "https://m.media-amazon.com/images/I/61SSVxTSs3L._SL1500_.jpg",
+                specifications: {
+                    "Display": "1.4 inch AMOLED",
+                    "Battery": "5 days",
+                    "Water Resistance": "5ATM",
+                    "Sensors": "Heart rate, SpO2",
+                    "Compatibility": "Android & iOS"
+                }
+            },
+            5: {
+                name: "Tablet",
+                price: "₹35,000",
+                description: "Versatile tablet perfect for work and entertainment on the go.",
+                image: "https://m.media-amazon.com/images/I/81gC7frRJyL._SL1500_.jpg",
+                specifications: {
+                    "Display": "10.9 inch Retina",
+                    "Processor": "A14 Bionic",
+                    "Storage": "256GB",
+                    "Battery": "10 hours",
+                    "Pencil Support": "Yes"
+                }
+            },
+            6: {
+                name: "Monitor",
+                price: "₹18,000",
+                description: "Professional grade monitor with stunning color accuracy.",
+                image: "https://m.media-amazon.com/images/I/71dMZ8PIN4L._SL1500_.jpg",
+                specifications: {
+                    "Size": "27 inch",
+                    "Resolution": "2K QHD",
+                    "Refresh Rate": "144Hz",
+                    "Response Time": "1ms",
+                    "Panel Type": "IPS"
+                }
+            },
+            7: {
+                name: "Keyboard",
+                price: "₹8,000",
+                description: "Mechanical gaming keyboard with RGB backlight.",
+                image: "https://m.media-amazon.com/images/I/71cngLX2xuL._SL1500_.jpg",
+                specifications: {
+                    "Type": "Mechanical",
+                    "Switches": "Cherry MX Blue",
+                    "Backlight": "RGB",
+                    "Layout": "Full size",
+                    "Anti-ghosting": "N-key rollover"
+                }
+            },
+            8: {
+                name: "Mouse",
+                price: "₹4,000",
+                description: "High-precision gaming mouse with customizable buttons.",
+                image: "https://m.media-amazon.com/images/I/61UxfXTUyvL._SL1500_.jpg",
+                specifications: {
+                    "DPI": "16000",
+                    "Buttons": "8 programmable",
+                    "Sensor": "Optical",
+                    "RGB": "Yes",
+                    "Weight": "95g"
+                }
+            },
+            9: {
+                name: "Speakers",
+                price: "₹12,000",
+                description: "2.1 channel speakers with deep bass and clear sound.",
+                image: "https://m.media-amazon.com/images/I/71D42sVHvtL._SL1500_.jpg",
+                specifications: {
+                    "Configuration": "2.1",
+                    "Power Output": "120W",
+                    "Frequency Response": "20Hz-20kHz",
+                    "Bluetooth": "Yes",
+                    "Remote": "Included"
+                }
+            },
+            10: {
+                name: "Gaming Console",
+                price: "₹45,000",
+                description: "Next-gen gaming console for immersive gaming experience.",
+                image: "https://m.media-amazon.com/images/I/71NBQ2a52CL._SL1500_.jpg",
+                specifications: {
+                    "CPU": "8-core Custom Zen 2",
+                    "GPU": "10.28 TFLOPS",
+                    "Storage": "825GB SSD",
+                    "Resolution": "4K",
+                    "Ray Tracing": "Yes"
+                }
+            },
+            11: {
+                name: "VR Headset",
+                price: "₹30,000",
+                description: "High-end VR headset for immersive virtual reality experience.",
+                image: "https://m.media-amazon.com/images/I/61onIwb8pGL._SL1500_.jpg",
+                specifications: {
+                    "Display": "OLED",
+                    "Resolution": "2880x1600",
+                    "Refresh Rate": "90Hz",
+                    "Field of View": "110°",
+                    "Tracking": "6DOF"
+                }
+            },
+            12: {
+                name: "Fitness Band",
+                price: "₹2,000",
+                description: "Smart fitness tracker with heart rate monitoring.",
+                image: "https://m.media-amazon.com/images/I/61JL0ccPltL._SL1500_.jpg",
+                specifications: {
+                    "Display": "0.96 inch OLED",
+                    "Battery": "7 days",
+                    "Water Resistance": "IP67",
+                    "Sensors": "Heart rate",
+                    "Compatibility": "Android & iOS"
+                }
+            },
+            13: {
+                name: "Drone",
+                price: "₹25,000",
+                description: "Professional camera drone with 4K recording capability.",
+                image: "https://m.media-amazon.com/images/I/71PK5+aQ6vL._SL1500_.jpg",
+                specifications: {
+                    "Camera": "4K 60fps",
+                    "Flight Time": "30 minutes",
+                    "Range": "10km",
+                    "Stabilization": "3-axis gimbal",
+                    "Obstacle Avoidance": "Yes"
+                }
+            },
+            14: {
+                name: "Camera",
+                price: "₹60,000",
+                description: "Professional DSLR camera with advanced features.",
+                image: "https://m.media-amazon.com/images/I/71EWRyqz3vL._SL1500_.jpg",
+                specifications: {
+                    "Sensor": "Full-frame CMOS",
+                    "Resolution": "24.2MP",
+                    "ISO Range": "100-51200",
+                    "Video": "4K 30fps",
+                    "Autofocus Points": "45"
+                }
+            },
+            15: {
+                name: "Ultra-wide Monitor",
+                price: "₹40,000",
+                description: "49-inch ultra-wide curved monitor for ultimate productivity.",
+                image: "https://m.media-amazon.com/images/I/71Y1YQTX3mL._SL1500_.jpg",
+                specifications: {
+                    "Size": "49 inch",
+                    "Resolution": "5120x1440",
+                    "Refresh Rate": "120Hz",
+                    "Aspect Ratio": "32:9",
+                    "HDR": "HDR1000"
+                }
+            }
+        };
+
+        // Get product ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
+        // Load product details
+        function loadProductDetails() {
+            if (productId && products[productId]) {
+                const product = products[productId];
+                document.getElementById('productTitle').textContent = product.name;
+                document.getElementById('productPrice').textContent = product.price;
+                document.getElementById('productDescription').textContent = product.description;
+                document.getElementById('productImage').src = product.image;
+                document.getElementById('productImage').alt = product.name;
+                
+                // Update specifications
+                const specList = document.getElementById('specList');
+                specList.innerHTML = '';
+                for (const [key, value] of Object.entries(product.specifications)) {
+                    specList.innerHTML += `
+                        <li class="spec-item">
+                            <span class="spec-label">${key}:</span>
+                            <span class="spec-value">${value}</span>
+                        </li>
+                    `;
+                }
+            }
+        }
+
+        // Update quantity
+        function updateQuantity(change) {
+            const quantityInput = document.getElementById('quantity');
+            let newQuantity = parseInt(quantityInput.value) + change;
+            if (newQuantity < 1) newQuantity = 1;
+            quantityInput.value = newQuantity;
+        }
+
+        // Add to cart
+        function addToCart() {
+            if (!productId || !products[productId]) return;
+
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const product = products[productId];
+
+            // Get existing cart or create new one
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+            // Check if product already exists in cart
+            const existingProductIndex = cart.findIndex(item => item.id === productId);
+            if (existingProductIndex !== -1) {
+                cart[existingProductIndex].quantity += quantity;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: product.name,
+                    price: product.price,
+                    quantity: quantity
+                });
+            }
+
+            // Save updated cart
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            // Show success message
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        // Load product details when page loads
+        window.onload = loadProductDetails;
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

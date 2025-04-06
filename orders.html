@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - SuperKart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, #ff8c00, #ff4500);
+            padding: 1rem;
+            height: 80px;
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-link {
+            color: white !important;
+            font-size: 18px;
+        }
+
+        .orders-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .order-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff4500;
+        }
+
+        .order-date {
+            color: #666;
+        }
+
+        .product-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .product-details {
+            margin-left: 1rem;
+        }
+
+        .product-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            color: #ff4500;
+            font-weight: bold;
+        }
+
+        .tracking-info {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .tracking-status {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .status-item {
+            text-align: center;
+            position: relative;
+            flex: 1;
+        }
+
+        .status-item::after {
+            content: '';
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: #ddd;
+            z-index: 1;
+        }
+
+        .status-item:last-child::after {
+            display: none;
+        }
+
+        .status-icon {
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            border: 2px solid #ddd;
+        }
+
+        .status-icon.active {
+            background: #ff4500;
+            color: white;
+            border-color: #ff4500;
+        }
+
+        .status-text {
+            margin-top: 0.5rem;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .no-orders {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .order-status {
+            color: #ff4500;
+            font-weight: bold;
+        }
+
+        #ordersContainer {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">SuperKart</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="orders.html">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="notifications.html">Notifications</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="orders-container">
+        <h3 class="mb-4">My Orders</h3>
+        <div id="ordersContainer">
+            <!-- Orders will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        function displayOrders() {
+            const ordersContainer = document.getElementById('ordersContainer');
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+
+            if (orders.length === 0) {
+                ordersContainer.innerHTML = `
+                    <div class="order-card">
+                        <div class="no-orders">
+                            <i class="fas fa-shopping-bag mb-3" style="font-size: 3rem; color: #ff4500;"></i>
+                            <h5>No orders yet</h5>
+                            <p>Start shopping to see your orders here!</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            ordersContainer.innerHTML = orders.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <div class="order-number">${order.orderId}</div>
+                            <div class="order-date">Ordered on: ${order.date}</div>
+                        </div>
+                        <div class="product-price">${order.amount}</div>
+                    </div>
+                    ${order.items.map(item => `
+                        <div class="d-flex mb-3">
+                            <img src="https://via.placeholder.com/100" alt="Product" class="product-image">
+                            <div class="product-details">
+                                <div class="product-title">${item.name}</div>
+                                <div>Quantity: ${item.quantity}</div>
+                                <div>Price: ${item.price}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                    <div class="tracking-info">
+                        <h6>Tracking Information</h6>
+                        <div class="tracking-status">
+                            <div class="status-item">
+                                <div class="status-icon active">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="status-text">Ordered</div>
+                            </div>
+                            <div class="status-item">
+                                <div class="status-icon">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <div class="status-text">Packed</div>
+                            </div>
+                            <div class="status-item">
+                                <div class="status-icon">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <div class="status-text">Shipped</div>
+                            </div>
+                            <div class="status-item">
+                                <div class="status-icon">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <div class="status-text">Delivered</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Display orders when page loads
+        window.onload = displayOrders;
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
